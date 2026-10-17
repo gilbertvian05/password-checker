@@ -1,1 +1,99 @@
-<!DOCTYPE html><html><head><title>Password Checker</title><style>body{background:#0f172a;color:white;font-family:Arial;display:flex;justify-content:center;align-items:center;height:100vh;margin:0}.box{background:#1e293b;padding:30px;border-radius:15px;width:400px;text-align:center}input{width:90%;padding:12px;border-radius:8px;border:none;margin:15px 0;font-size:16px}.bar{height:10px;background:#334155;border-radius:5px;overflow:hidden}.fill{height:100%;width:0%;transition:0.3s}.weak{background:#ef4444}.medium{background:#f59e0b}.strong{background:#22c55e}.god{background:#a855f7}</style></head><body><div class="box"><h1>🔒 Password Checker</h1><input type="text" id="pass" placeholder="Type password..." oninput="check()"><div class="bar"><div id="fill" class="fill"></div></div><p id="score">Score: 0</p><p id="strength">Start typing...</p><p id="time"></p><p id="feedback" style="color:#94a3b8"></p></div><script>function checkPassword(p){let s=0,f=[];if(p.length>=8)s+=20;if(p.length>=12)s+=20;if(p.length>=16)s+=10;if(p.length<8)f.push("Too short");if(/[A-Z]/.test(p))s+=15;else f.push("Need CAPITAL");if(/[a-z]/.test(p))s+=15;else f.push("Need small");if(/[0-9]/.test(p))s+=10;else f.push("Need number");if(/[!@#$%^&*]/.test(p))s+=10;else f.push("Need symbol");let st="",ct="";if(s<40){st="WEAK";ct="Hack: 2 sec"}else if(s<70){st="MEDIUM";ct="Hack: 2 weeks"}else if(s<90){st="STRONG!";ct="Hack: 5 years"}else{st="GOD MODE!";ct="Hack: 100+ years"}return{score:s,strength:st,crackTime:ct,feedback:f}}function check(){let p=document.getElementById("pass").value;let r=checkPassword(p);document.getElementById("score").innerText="Score: "+r.score+"/100";document.getElementById("strength").innerText=r.strength;document.getElementById("time").innerText=r.crackTime;document.getElementById("feedback").innerText=r.feedback.join(" | ");let f=document.getElementById("fill");f.style.width=r.score+"%";f.className="fill "+(r.score<40?"weak":r.score<70?"medium":r.score<90?"strong":"god")}</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Password Checker - Vian Gilbert</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:radial-gradient(ellipse at top, #1a1a3e 0%, #0a0a1a 70%);
+  font-family:'Inter',sans-serif;
+  padding:20px;color:#fff;
+}
+.card{
+  width:100%;max-width:460px;
+  background:rgba(255,255,255,0.07);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:24px;padding:32px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.5);
+}
+.header{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.header h1{font-size:28px;font-weight:800}
+.input-wrap{
+  position:relative;display:flex;align-items:center;
+  background:#fff;border-radius:14px;
+  padding:4px 6px 4px 16px;
+}
+.input-wrap input{
+  flex:1;border:none;outline:none;font-size:16px;
+  font-family:'JetBrains Mono',monospace;
+  padding:14px 8px;color:#111;background:transparent;
+}
+.icon-btn{
+  width:40px;height:40px;border:none;border-radius:10px;
+  background:#f3f4f6;cursor:pointer;font-size:18px;
+  display:grid;place-items:center;
+}
+.bar-track{
+  height:10px;background:rgba(255,255,255,0.12);
+  border-radius:99px;margin-top:16px;overflow:hidden;
+}
+.bar-fill{height:100%;width:0%;border-radius:99px;transition:0.4s;}
+.stats{margin-top:18px;display:flex;justify-content:space-between;align-items:center}
+.badge{
+  padding:6px 14px;border-radius:99px;
+  font-weight:800;font-size:13px;
+}
+.meta{margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:13px;opacity:0.7;line-height:1.6}
+.checks{margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.check{
+  font-size:12px;padding:8px 10px;border-radius:10px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.08);
+}
+.check.ok{background:rgba(34,197,94,0.15);border-color:rgba(34,197,94,0.3);color:#86efac}
+.footer{margin-top:20px;text-align:center;font-size:11px;opacity:0.4}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header"><span style="font-size:32px">🔒</span><h1>Password Checker</h1></div>
+  <div class="input-wrap">
+    <input id="pwd" type="password" placeholder="Type password..." autocomplete="off">
+    <button class="icon-btn" id="eye">👁️</button>
+    <button class="icon-btn" id="copy">📋</button>
+  </div>
+  <div class="bar-track"><div id="bar" class="bar-fill"></div></div>
+  <div class="stats">
+    <div id="score">Score: 0/100</div>
+    <div class="badge" id="badge">START TYPING...</div>
+  </div>
+  <div class="meta" id="meta">Length: 0 • Crack time: -<br>Tip: Use 12+ chars</div>
+  <div class="checks">
+    <div class="check" id="c-len">❌ 12+ characters</div>
+    <div class="check" id="c-upper">❌ Uppercase A-Z</div>
+    <div class="check" id="c-lower">❌ Lowercase a-z</div>
+    <div class="check" id="c-num">❌ Number 0-9</div>
+    <div class="check" id="c-sym">❌ Symbol @!#</div>
+    <div class="check" id="c-common">❌ Not common</div>
+  </div>
+  <div class="footer">Built by Vian Gilbert • GitHub Pages</div>
+</div>
+<script>
+const pwd=document.getElementById('pwd'),bar=document.getElementById('bar'),scoreEl=document.getElementById('score'),badge=document.getElementById('badge'),meta=document.getElementById('meta'),eye=document.getElementById('eye'),copy=document.getElementById('copy');
+const checks={len:document.getElementById('c-len'),upper:document.getElementById('c-upper'),lower:document.getElementById('c-lower'),num:document.getElementById('c-num'),sym:document.getElementById('c-sym'),common:document.getElementById('c-common')};
+const common=['password','123456','qwerty','abc123','letmein','admin'];
+function crackTime(p){const cs=(/[a-z]/.test(p)?26:0)+(/[A-Z]/.test(p)?26:0)+(/[0-9]/.test(p)?10:0)+(/[^A-Za-z0-9]/.test(p)?32:0);if(!cs)return'-';const g=Math.pow(cs,p.length);const sec=g/1e10;if(sec<60)return Math.round(sec)+' sec';if(sec<3600)return Math.round(sec/60)+' min';if(sec<86400)return Math.round(sec/3600)+' hours';if(sec<31536000)return Math.round(sec/86400)+' days';return Math.round(sec/31536000).toLocaleString()+'+ years';}
+pwd.addEventListener('input',()=>{const v=pwd.value;let s=0;const hasU=/[A-Z]/.test(v),hasL=/[a-z]/.test(v),hasN=/[0-9]/.test(v),hasS=/[^A-Za-z0-9]/.test(v);if(v.length>=8)s+=15;if(v.length>=12)s+=20;if(v.length>=16)s+=15;if(hasU)s+=10;if(hasL)s+=10;if(hasN)s+=10;if(hasS)s+=15;if(hasU&&hasL&&hasN&&hasS)s+=5;if(common.some(c=>v.toLowerCase().includes(c)))s=Math.min(s,20);s=Math.min(100,s);bar.style.width=s+'%';let color='#ef4444',label='WEAK';if(s>20){color='#f97316';label='FAIR';}if(s>45){color='#eab308';label='GOOD';}if(s>70){color='#22c55e';label='STRONG';}if(s>=90){color='#a855f7';label='GOD MODE!';}if(v.length==0){color='transparent';label='START TYPING...';}bar.style.background=color;badge.textContent=label;badge.style.background=color==='transparent'?'rgba(255,255,255,0.1)':color;badge.style.color=s<45?'#fff':'#000';scoreEl.textContent='Score: '+s+'/100';meta.innerHTML='Length: '+v.length+' • Crack time: '+(v?crackTime(v):'-')+'<br>'+(s>=90?'🔥 Unhackable!':s>=50?'Keep going - add symbols & length':'Tip: Use 12+ chars with A-Z, a-z, 0-9, symbols');const set=(el,ok,t)=>{el.textContent=(ok?'✅ ':'❌ ')+t;el.className='check'+(ok?' ok':'');};set(checks.len,v.length>=12,'12+ characters');set(checks.upper,hasU,'Uppercase A-Z');set(checks.lower,hasL,'Lowercase a-z');set(checks.num,hasN,'Number 0-9');set(checks.sym,hasS,'Symbol @!#');set(checks.common,!common.some(c=>v.toLowerCase().includes(c))&&v.length>0,'Not common');});
+eye.onclick=()=>{pwd.type=pwd.type==='password'?'text':'password';eye.textContent=pwd.type==='password'?'👁️':'🙈';};
+copy.onclick=async()=>{if(!pwd.value)return;await navigator.clipboard.writeText(pwd.value);const o=copy.textContent;copy.textContent='✅';setTimeout(()=>copy.textContent=o,1200);};
+</script>
+</body>
+</html>
